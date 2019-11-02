@@ -38,10 +38,10 @@ pipeline {
                     // Run Terraform
                     dir("terraform") {
                         echo 'Terraform Stuff'
-                        // sh 'ls -l'
-                        // sh 'terraform --version'
-                        // sh 'terraform init'
-                        // sh 'terraform plan -var-file="vars/dev-us-east-1.tfvars" -out=plan'
+                        sh 'ls -l'
+                        sh 'terraform --version'
+                        sh 'terraform init'
+                        sh 'terraform plan -var-file="vars/dev-us-east-1.tfvars" -out=plan'
                         // sh 'terraform apply plan'
                     }
                 }
