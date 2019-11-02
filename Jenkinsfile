@@ -42,7 +42,7 @@ pipeline {
                         sh 'terraform --version'
                         sh 'terraform init'
                         sh 'terraform plan -var-file="vars/dev-us-east-1.tfvars" -out=plan'
-                        // sh 'terraform apply plan'
+                        sh 'terraform apply plan'
                     }
                 }
  
