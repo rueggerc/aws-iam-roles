@@ -1,3 +1,3 @@
-output "ruegger_execution_role_arn" {
-    value = "${aws_iam_role.ruegger_lambda_execution_role.arn}"
+output "rueggerllc_execution_role_arn" {
+    value = "${aws_iam_role.lambda_execution_role.arn}"
 }
