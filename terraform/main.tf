@@ -23,14 +23,25 @@ resource "aws_iam_role" "lambda_execution_role" {
   assume_role_policy = "${file("policies/lambda-role.json")}"
 }
 
+resource "aws_iam_role" "api_gateway_lambda_invoke_role" {
+  name = "ruegger_api_gateway_lambda_invoke_role"
+  force_detach_policies = true
+  assume_role_policy = "${file("policies/lambda-role.json")}"
+}
+
 // CloudWatch Policy
 resource "aws_iam_policy" "cloudwatch_policy" {
   name   = "ruegger_cloudwatch_logs_policy"
   policy = "${file("policies/cloudwatch-policy.json")}"
 }
 
-# Attach Policy to Role
+# Attach Policy to Roles
 resource "aws_iam_role_policy_attachment" "attach_role" {
   role       = "${aws_iam_role.lambda_execution_role.name}"
+  policy_arn = "${aws_iam_policy.cloudwatch_policy.arn}"
+}
+
+resource "aws_iam_role_policy_attachment" "attach_role-lambda-invoke" {
+  role       = "${aws_iam_role.api_gateway_lambda_invoke_role.name}"
   policy_arn = "${aws_iam_policy.cloudwatch_policy.arn}"
 }
