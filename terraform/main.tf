@@ -1,15 +1,30 @@
+provider "aws" {
+    region = "${var.region}"
+}
 
-##################################
-# Account
-##################################
+terraform {
+    backend "s3" {
+        bucket = "rueggerllc-terraform-state"
+        key = "aws-iam-roles/us-east-1/dev/terraform.tfstate"
+        region = "us-east-1"
+        dynamodb_table = "rueggerllc-terraform-locks"
+        encrypt = true
+    }
+}
 data "aws_caller_identity" "current_account" {
 }
 
 ##################################
 # Roles
 ##################################
-resource "aws_iam_role" "ruegger_lambda_execution_role" {
+resource "aws_iam_role" "lambda_execution_role" {
   name = "ruegger_lambda_execution_role"
+  force_detach_policies = true
+  assume_role_policy = "${file("policies/lambda-role.json")}"
+}
+
+resource "aws_iam_role" "api_gateway_lambda_invoke_role" {
+  name = "ruegger_api_gateway_lambda_invoke_role"
   force_detach_policies = true
   assume_role_policy = "${file("policies/lambda-role.json")}"
 }
@@ -20,8 +35,21 @@ resource "aws_iam_policy" "cloudwatch_policy" {
   policy = "${file("policies/cloudwatch-policy.json")}"
 }
 
-# Attach Policy to Role
+// Lambda Invocation Policy
+resource "aws_iam_role_policy" "invocation_policy" {
+  name = "ruegger_invoke_lambda_policy"
+  role = "${aws_iam_role.api_gateway_lambda_invoke_role.id}"
+  policy = "${file("policies/invoke-lambda-policy.json")}"
+}
+
+
+# Attach Policy to Roles
 resource "aws_iam_role_policy_attachment" "attach_role" {
-  role       = "${aws_iam_role.ruegger_lambda_execution_role.name}"
-  policy_arn = "${aws_iam_policy.cloudwatch-policy.arn}"
+  role       = "${aws_iam_role.lambda_execution_role.name}"
+  policy_arn = "${aws_iam_policy.cloudwatch_policy.arn}"
+}
+
+resource "aws_iam_role_policy_attachment" "attach_role-lambda-invoke" {
+  role       = "${aws_iam_role.api_gateway_lambda_invoke_role.name}"
+  policy_arn = "${aws_iam_policy.cloudwatch_policy.arn}"
 }

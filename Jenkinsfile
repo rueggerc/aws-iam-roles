@@ -29,6 +29,11 @@ pipeline {
             }
         }
         stage ('Deploy Application') {
+            when { 
+                not { 
+                  branch 'master'
+                }
+            }
             steps {
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'aws-key', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                     script {
@@ -38,11 +43,11 @@ pipeline {
                     // Run Terraform
                     dir("terraform") {
                         echo 'Terraform Stuff'
-                        // sh 'ls -l'
-                        // sh 'terraform --version'
-                        // sh 'terraform init'
-                        // sh 'terraform plan -var-file="vars/dev-us-east-1.tfvars" -out=plan'
-                        // sh 'terraform apply plan'
+                        sh 'ls -l'
+                        sh 'terraform --version'
+                        sh 'terraform init'
+                        sh 'terraform plan -var-file="vars/dev-us-east-1.tfvars" -out=plan'
+                        sh 'terraform apply plan'
                     }
                 }
  
