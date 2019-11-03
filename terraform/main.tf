@@ -35,6 +35,14 @@ resource "aws_iam_policy" "cloudwatch_policy" {
   policy = "${file("policies/cloudwatch-policy.json")}"
 }
 
+// Lambda Invocation Policy
+resource "aws_iam_role_policy" "invocation_policy" {
+  name = "ruegger_invoke_lambda_policy"
+  role = "${aws_iam_role.api_gateway_lambda_invoke_role.id}"
+  policy = "${file("policies/invoke-lambda-policy.json")}"
+}
+
+
 # Attach Policy to Roles
 resource "aws_iam_role_policy_attachment" "attach_role" {
   role       = "${aws_iam_role.lambda_execution_role.name}"
