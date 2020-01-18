@@ -61,10 +61,10 @@ resource "aws_iam_role_policy_attachment" "attach_policy_cloudwatch" {
   policy_arn = "${aws_iam_policy.cloudwatch_policy.arn}"
 }
 
-resource "aws_iam_role_policy_attachment" "attach_policy_sqs" {
-  role       = "${aws_iam_role.lambda_execution_role.name}"
-  policy_arn = "${aws_iam_policy.sqs_policy.arn}"
-}
+# resource "aws_iam_role_policy_attachment" "attach_policy_sqs" {
+#   role       = "${aws_iam_role.lambda_execution_role.name}"
+#   policy_arn = "${aws_iam_policy.sqs_policy.arn}"
+# }
 
 resource "aws_iam_role_policy_attachment" "attach_role-lambda-invoke" {
   role       = "${aws_iam_role.api_gateway_lambda_invoke_role.name}"
