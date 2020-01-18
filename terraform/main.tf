@@ -51,12 +51,12 @@ resource "aws_iam_role_policy" "sqs_policy" {
 
 
 # Attach Policies to Roles
-resource "aws_iam_role_policy_attachment" "attach_role" {
+resource "aws_iam_role_policy_attachment" "attach_policy_cloudwatch" {
   role       = "${aws_iam_role.lambda_execution_role.name}"
   policy_arn = "${aws_iam_policy.cloudwatch_policy.arn}"
 }
 
-resource "aws_iam_role_policy_attachment" "attach_role" {
+resource "aws_iam_role_policy_attachment" "attach_policy_sqs" {
   role       = "${aws_iam_role.lambda_execution_role.name}"
   policy_arn = "${aws_iam_policy.sqs_policy.arn}"
 }
