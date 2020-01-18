@@ -42,11 +42,23 @@ resource "aws_iam_role_policy" "invocation_policy" {
   policy = "${file("policies/invoke-lambda-policy.json")}"
 }
 
+// SQS Policy
+resource "aws_iam_role_policy" "sqs_policy" {
+  name = "ruegger_invoke_lambda_policy"
+  role = "${ruegger_sqs_policy}"
+  policy = "${file("policies/sqs-policy.json")}"
+}
 
-# Attach Policy to Roles
+
+# Attach Policies to Roles
 resource "aws_iam_role_policy_attachment" "attach_role" {
   role       = "${aws_iam_role.lambda_execution_role.name}"
   policy_arn = "${aws_iam_policy.cloudwatch_policy.arn}"
+}
+
+resource "aws_iam_role_policy_attachment" "attach_role" {
+  role       = "${aws_iam_role.lambda_execution_role.name}"
+  policy_arn = "${aws_iam_policy.sqs_policy.arn}"
 }
 
 resource "aws_iam_role_policy_attachment" "attach_role-lambda-invoke" {
